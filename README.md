@@ -63,8 +63,6 @@ http://localhost:9192/webapi
 
 GET /books
 
-markdown
-Copy code
 
 ## Получение книги по ID
 
@@ -78,8 +76,6 @@ Copy code
 
 GET /books/1
 
-markdown
-Copy code
 
 ## Получение книги по ISBN
 
@@ -93,8 +89,6 @@ Copy code
 
 GET /books/isbn/978-3-16-148410-0
 
-markdown
-Copy code
 
 ## Добавление новой книги
 
@@ -116,9 +110,6 @@ POST /books/add
     "author": "Автор"
 }
 ```
-
-markdown
-Copy code
 
 ## Обновление информации о книге
 
@@ -142,8 +133,6 @@ PUT /books/update
 }
 ```
 
-markdown
-Copy code
 
 ## Удаление книги по ID
 
@@ -173,8 +162,6 @@ DELETE /books/delete/1
 
 GET /library/free
 
-markdown
-Copy code
 
 ## Получение списка всех записей реестра книг
 
@@ -188,8 +175,6 @@ Copy code
 
 GET /library
 
-markdown
-Copy code
 
 ## Добавление записи в реестр книг
 
@@ -206,8 +191,6 @@ POST /library/add
 1
 ```
 
-markdown
-Copy code
 
 ## Удаление записи реестра книг по ID
 
@@ -221,8 +204,6 @@ Copy code
 
 DELETE /library/delete/1
 
-markdown
-Copy code
 
 ## Получение записи реестра книги по ID
 
