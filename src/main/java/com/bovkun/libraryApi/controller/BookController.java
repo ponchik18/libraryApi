@@ -2,22 +2,17 @@ package com.bovkun.libraryApi.controller;
 
 import com.bovkun.libraryApi.dto.BookDTO;
 import com.bovkun.libraryApi.service.impl.DefaultBookService;
-import com.bovkun.libraryApi.util.RestPreconditions;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/books")
 public class BookController {
 
-    private DefaultBookService bookService;
-
-    @Autowired
-    public void setBookService(DefaultBookService bookService) {
-        this.bookService = bookService;
-    }
+    private final DefaultBookService bookService;
 
     @GetMapping
     public List<BookDTO> findAllBooks() {
@@ -26,12 +21,12 @@ public class BookController {
 
     @GetMapping("/{id}")
     public BookDTO findBookById(@PathVariable Long id) {
-        return RestPreconditions.checkFound(bookService.getBookById(id));
+        return bookService.getBookById(id);
     }
 
     @GetMapping("/isbn/{isbn}")
     public BookDTO findBookByIsbn(@PathVariable String isbn) {
-        return RestPreconditions.checkFound(bookService.getBookByISBN(isbn));
+        return bookService.getBookByISBN(isbn);
     }
 
     @PostMapping("/add")
@@ -39,17 +34,13 @@ public class BookController {
         return bookService.saveBook(book);
     }
 
-    @PutMapping("/update")
+    @PostMapping("/update")
     public BookDTO updateBook(@RequestBody BookDTO book) {
-        return RestPreconditions.checkFound(bookService.updateBook(book));
+        return bookService.updateBook(book);
     }
 
-    @DeleteMapping("/delete/{id}")
-    public String deleteBook(@PathVariable Long id) {
+    @DeleteMapping("/{id}")
+    public BookDTO deleteBook(@PathVariable Long id) {
         return bookService.deleteBook(id);
     }
-
-
-
-
 }

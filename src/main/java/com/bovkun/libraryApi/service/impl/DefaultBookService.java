@@ -3,21 +3,21 @@ package com.bovkun.libraryApi.service.impl;
 import com.bovkun.libraryApi.convert.BookDTOConverter;
 import com.bovkun.libraryApi.dto.BookDTO;
 import com.bovkun.libraryApi.entity.Book;
+import com.bovkun.libraryApi.exception.ResourceNotFoundException;
 import com.bovkun.libraryApi.repository.BookRepository;
 import com.bovkun.libraryApi.service.BookService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Objects;
 
 @Service
+@RequiredArgsConstructor
 public class DefaultBookService implements BookService {
-    @Autowired
-    private BookRepository bookRepository;
+    private final BookRepository bookRepository;
 
-    @Autowired
-    private BookDTOConverter bookDTOConverter;
+    private final BookDTOConverter bookDTOConverter;
 
     @Override
     public List<BookDTO> getBooks() {
@@ -31,7 +31,7 @@ public class DefaultBookService implements BookService {
 
     @Override
     public BookDTO getBookByISBN(String isbn) {
-        return bookDTOConverter.convertBookToBookDTO(bookRepository.findByIsbn(isbn));
+        return bookDTOConverter.convertBookToBookDTO(bookRepository.findByIsbn(isbn).orElseThrow(() -> new ResourceNotFoundException(isbn)));
     }
 
     @Override
@@ -41,23 +41,23 @@ public class DefaultBookService implements BookService {
     }
 
     @Override
-    public String deleteBook(Long id) {
+    public BookDTO deleteBook(Long id) {
+        BookDTO bookDTO = bookDTOConverter.convertBookToBookDTO(bookRepository.findById(id).orElseThrow(() -> new ResourceNotFoundException(id)));
         bookRepository.deleteById(id);
-        return "book removed with id = " + id;
+        return bookDTO;
     }
 
     @Override
     public BookDTO updateBook(BookDTO bookDTO) {
         Book book = bookDTOConverter.convertBookDTOToBook(bookDTO);
-        Book existingBook = bookRepository.findById(book.getId()).orElse(null);
+        Book existingBook = bookRepository.findById(book.getId()).orElseThrow(() -> new ResourceNotFoundException(book.getId()));
         if (Objects.isNull(existingBook)) {
-           return null;
+            return null;
         }
         existingBook.setAuthor(book.getAuthor());
         existingBook.setDescription(book.getDescription());
         existingBook.setGenre(book.getGenre());
         existingBook.setIsbn(book.getIsbn());
-
         return bookDTOConverter.convertBookToBookDTO(bookRepository.save(existingBook));
     }
 }

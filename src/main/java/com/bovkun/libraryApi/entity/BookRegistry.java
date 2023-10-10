@@ -1,19 +1,18 @@
 package com.bovkun.libraryApi.entity;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 
-@Data
+@Entity
+@Getter
+@Setter
 @AllArgsConstructor
 @NoArgsConstructor
-@Entity
 @Table(name = "booksRegistry")
 public class BookRegistry {
     @Id
@@ -30,7 +29,7 @@ public class BookRegistry {
             borrowedAt = LocalDate.now();
         }
         if (returnBy == null) {
-            returnBy = borrowedAt.plus(5, ChronoUnit.DAYS);
+            returnBy = borrowedAt.plusDays(5);
         }
     }
 

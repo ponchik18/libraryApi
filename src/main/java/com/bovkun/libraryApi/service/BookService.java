@@ -9,7 +9,7 @@ public interface BookService {
     BookDTO getBookById(Long id);
     BookDTO getBookByISBN(String isbn);
     BookDTO saveBook(BookDTO bookDTO);
-    String deleteBook(Long id);
+    BookDTO deleteBook(Long id);
     BookDTO updateBook(BookDTO bookDTO);
 
 }

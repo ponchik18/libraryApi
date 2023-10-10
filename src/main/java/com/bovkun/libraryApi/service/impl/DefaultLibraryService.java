@@ -6,35 +6,37 @@ import com.bovkun.libraryApi.dto.BookDTO;
 import com.bovkun.libraryApi.dto.BookRegistryDTO;
 import com.bovkun.libraryApi.entity.Book;
 import com.bovkun.libraryApi.entity.BookRegistry;
+import com.bovkun.libraryApi.exception.ResourceNotFoundException;
 import com.bovkun.libraryApi.repository.BookRegistryRepository;
 import com.bovkun.libraryApi.repository.BookRepository;
 import com.bovkun.libraryApi.service.LibraryService;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Objects;
 
 @Service
+@RequiredArgsConstructor
 public class DefaultLibraryService implements LibraryService {
-    @Autowired
-    private DefaultBookService bookService;
-    @Autowired
-    private BookRegistryRepository bookRegistryRepository;
-    @Autowired
-    private BookRegistryDTOConverter bookRegistryDTOConverter;
 
-    @Autowired
-    private BookDTOConverter bookDTOConverter;
+    private final DefaultBookService bookService;
 
-    @Autowired
-    private BookRepository bookRepository;
+    private final BookRegistryRepository bookRegistryRepository;
+
+    private final BookRegistryDTOConverter bookRegistryDTOConverter;
+
+
+    private final BookDTOConverter bookDTOConverter;
+
+
+    private final BookRepository bookRepository;
 
     @Override
     public BookRegistryDTO addBookRegistry(Long bookId) {
         BookRegistry bookRegistry = new BookRegistry();
         Book addedBook = bookDTOConverter.convertBookDTOToBook(bookService.getBookById(bookId));
-        if(Objects.isNull(addedBook)){
+        if (Objects.isNull(addedBook)) {
             return null;
         }
         bookRegistry.setBook(addedBook);
@@ -44,14 +46,13 @@ public class DefaultLibraryService implements LibraryService {
     }
 
     @Override
-    public List<BookRegistryDTO> getAllBookRegistry()
-    {
+    public List<BookRegistryDTO> getAllBookRegistry() {
         return bookRegistryDTOConverter.convertListOfBookRegistryToListOfBookRegistryDTO(bookRegistryRepository.findAll());
     }
 
     @Override
     public BookRegistryDTO getBookRegistryById(Long bookRegistryId) {
-        return bookRegistryDTOConverter.convertBookRegistryToBookRegistryDTO(bookRegistryRepository.findById(bookRegistryId).orElse(null));
+        return bookRegistryDTOConverter.convertBookRegistryToBookRegistryDTO(bookRegistryRepository.findById(bookRegistryId).orElseThrow(() -> new ResourceNotFoundException(bookRegistryId)));
     }
 
     @Override
